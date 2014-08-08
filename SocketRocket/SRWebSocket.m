@@ -252,6 +252,8 @@ typedef void (^data_callback)(SRWebSocket *webSocket,  NSData *data);
     
     BOOL _isPumping;
     
+    BOOL _isAlive;
+    
     NSMutableSet *_scheduledRunloops;
     
     // We use this to retain ourselves.
@@ -462,6 +464,10 @@ static __strong NSData *CRLFCRLF;
     if (!_didFail) {
         [self _readFrameNew];
     }
+    
+    dispatch_async(_workQueue, ^{
+        [self _keepAlive];
+    });
 
     [self _performDelegateBlock:^{
         if ([self.delegate respondsToSelector:@selector(webSocketDidOpen:)]) {
@@ -487,6 +493,18 @@ static __strong NSData *CRLFCRLF;
             [self _readHTTPHeader];
         }
     }];
+}
+
+- (void)_keepAlive {
+    self->_isAlive = NO;
+    [self _sendFrameWithOpcode:SROpCodePing data:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 60 * NSEC_PER_SEC), _workQueue, ^{ // 60 second keep alive
+        if (self->_isAlive) {
+            [self _keepAlive];
+        } else {
+            [self _failWithError:[NSError errorWithDomain:SRWebSocketErrorDomain code:2134 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Server unresponsive to keepalive"] forKey:NSLocalizedDescriptionKey]]];
+        }
+    });
 }
 
 - (void)didConnect
@@ -719,7 +737,7 @@ static __strong NSData *CRLFCRLF;
 
 - (void)handlePong;
 {
-    // NOOP
+    self->_isAlive = YES;
 }
 
 - (void)_handleMessage:(id)message
