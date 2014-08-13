@@ -74,6 +74,52 @@ static NSString *const SRWebSocketAppendToSecKeyString = @"258EAFA5-E914-47DA-95
 static inline int32_t validate_dispatch_data_partial_string(NSData *data);
 static inline void SRFastLog(NSString *format, ...);
 
+/**
+ * Support for dispatching a cancelable block
+ * http://sebastienthiebaud.us/blog/ios/gcd/block/2014/04/09/diggint-into-gcd-1-cancel-dispatch-after.html
+ */
+
+typedef void(^dispatch_cancelable_block_t)(BOOL cancel);
+static dispatch_cancelable_block_t dispatch_after_delay(float delay,dispatch_queue_t queue, dispatch_block_t block);
+
+static dispatch_cancelable_block_t dispatch_after_delay(float delay, dispatch_queue_t queue, dispatch_block_t block) {
+    if (block == nil)
+        return nil;
+    
+    // First we have to create a new dispatch_cancelable_block_t and we also need to copy the block given (if you want more explanations about the __block storage type, read this: https://developer.apple.com/library/ios/documentation/cocoa/conceptual/Blocks/Articles/bxVariables.html#//apple_ref/doc/uid/TP40007502-CH6-SW6
+    __block dispatch_cancelable_block_t cancelableBlock = nil;
+    __block dispatch_block_t originalBlock = [block copy];
+    
+    // This block will be executed in NOW() + delay
+    dispatch_cancelable_block_t delayBlock = ^(BOOL cancel){
+        if (cancel == NO && originalBlock)
+            dispatch_async(queue, originalBlock);
+        
+        // We don't want to hold any objects in the memory
+        originalBlock = nil;
+        cancelableBlock = nil;
+    };
+    
+    cancelableBlock = [delayBlock copy];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        // We are now in the future (NOW() + delay). It means the block hasn't been canceled so we can execute it
+        if (cancelableBlock)
+            cancelableBlock(NO);
+    });
+    
+    return cancelableBlock;
+}
+
+static void cancel_block(dispatch_cancelable_block_t block) {
+    if (block == nil)
+        return;
+    
+    block(YES);
+}
+
+////
+
 @interface NSData (SRWebSocket)
 
 - (NSString *)stringBySHA1ThenBase64Encoding;
@@ -253,6 +299,7 @@ typedef void (^data_callback)(SRWebSocket *webSocket,  NSData *data);
     BOOL _isPumping;
     
     BOOL _isAlive;
+    dispatch_cancelable_block_t _keepAliveBlock;
     
     NSMutableSet *_scheduledRunloops;
     
@@ -498,8 +545,8 @@ static __strong NSData *CRLFCRLF;
 - (void)_keepAlive {
     self->_isAlive = NO;
     [self _sendFrameWithOpcode:SROpCodePing data:nil];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 60 * NSEC_PER_SEC), _workQueue, ^{ // 60 second keep alive
-        if (self->_isAlive) {
+    self->_keepAliveBlock = dispatch_after_delay(60, _workQueue, ^{
+        if (self->_isAlive && self.readyState == SR_OPEN) {
             [self _keepAlive];
         } else {
             [self _failWithError:[NSError errorWithDomain:SRWebSocketErrorDomain code:2134 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Server unresponsive to keepalive"] forKey:NSLocalizedDescriptionKey]]];
@@ -681,6 +728,10 @@ static __strong NSData *CRLFCRLF;
     dispatch_async(_workQueue, ^{
         if (self.readyState != SR_CLOSED) {
             _failed = YES;
+            
+            cancel_block(self->_keepAliveBlock);
+            self->_keepAliveBlock = nil;
+            
             [self _performDelegateBlock:^{
                 if ([self.delegate respondsToSelector:@selector(webSocket:didFailWithError:)]) {
                     [self.delegate webSocket:self didFailWithError:error];
@@ -1094,6 +1145,10 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
         }
         
         if (!_failed) {
+            
+            cancel_block(self->_keepAliveBlock);
+            self->_keepAliveBlock = nil;
+            
             [self _performDelegateBlock:^{
                 if ([self.delegate respondsToSelector:@selector(webSocket:didCloseWithCode:reason:wasClean:)]) {
                     [self.delegate webSocket:self didCloseWithCode:_closeCode reason:_closeReason wasClean:YES];
@@ -1439,6 +1494,10 @@ static const size_t SRFrameHeaderOverhead = 32;
 
                     if (!_sentClose && !_failed) {
                         _sentClose = YES;
+                        
+                        cancel_block(self->_keepAliveBlock);
+                        self->_keepAliveBlock = nil;
+                        
                         // If we get closed in this state it's probably not clean because we should be sending this when we send messages
                         [self _performDelegateBlock:^{
                             if ([self.delegate respondsToSelector:@selector(webSocket:didCloseWithCode:reason:wasClean:)]) {
