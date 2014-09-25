@@ -48,6 +48,7 @@
 #error SocketRocket must be compiled with ARC enabled
 #endif
 
+#define MAX_FRAME_SIZE 64000 // in bytes
 
 typedef enum  {
     SROpCodeTextFrame = 0x1,
@@ -758,20 +759,53 @@ static __strong NSData *CRLFCRLF;
     [_outputBuffer appendData:data];
     [self _pumpWriting];
 }
+
 - (void)send:(id)data;
 {
     NSAssert(self.readyState != SR_CONNECTING, @"Invalid State: Cannot call send: until connection is open");
     // TODO: maybe not copy this for performance
-    data = [data copy];
+    __block id sData = [data copy];
     dispatch_async(_workQueue, ^{
-        if ([data isKindOfClass:[NSString class]]) {
-            [self _sendFrameWithOpcode:SROpCodeTextFrame data:[(NSString *)data dataUsingEncoding:NSUTF8StringEncoding]];
-        } else if ([data isKindOfClass:[NSData class]]) {
-            [self _sendFrameWithOpcode:SROpCodeBinaryFrame data:data];
-        } else if (data == nil) {
-            [self _sendFrameWithOpcode:SROpCodeTextFrame data:data];
+        SROpCode opcode = 0;
+        
+        if ([sData isKindOfClass:[NSString class]]) {
+            opcode = SROpCodeTextFrame;
+            sData = [(NSString *)sData dataUsingEncoding:NSUTF8StringEncoding];
+        } else if ([sData isKindOfClass:[NSData class]]) {
+            opcode = SROpCodeBinaryFrame;
+        } else if (sData == nil) {
+            opcode = SROpCodeTextFrame;
         } else {
             assert(NO);
+        }
+        
+        NSAssert(sData == nil || [sData isKindOfClass:[NSData class]] || [sData isKindOfClass:[NSString class]], @"Function expects nil, NSString or NSData");
+        
+        size_t payloadLength = [sData isKindOfClass:[NSString class]] ? [(NSString *)sData lengthOfBytesUsingEncoding:NSUTF8StringEncoding] : [sData length];
+        if (payloadLength < MAX_FRAME_SIZE) { // unfragmented
+            [self _sendFrameWithOpcode:opcode data:sData];
+        } else { // fragmented
+            const uint8_t *unmasked_payload = NULL;
+            for (size_t pos = 0; pos < payloadLength; pos += MAX_FRAME_SIZE) {
+                size_t frameSize = (pos + MAX_FRAME_SIZE) > payloadLength ? payloadLength - pos : MAX_FRAME_SIZE;
+                
+                if ([sData isKindOfClass:[NSData class]]) {
+                    unmasked_payload = (const uint8_t *)[[sData subdataWithRange:NSMakeRange(pos, frameSize)] bytes];
+                } else if ([sData isKindOfClass:[NSString class]]) {
+                    unmasked_payload =  (const uint8_t *)[[sData substringWithRange:NSMakeRange(pos, frameSize)] UTF8String];
+                }
+                
+                if (pos == 0) {
+                    // START - First frame w/fin bit clear, and opcode other than 0
+                    [self _sendFrameWithOpcode:opcode payload:unmasked_payload length:frameSize finMask:SRFinMaskClear];
+                } else if ((pos + MAX_FRAME_SIZE) < payloadLength) {
+                    // CONTINUE - zero or more frames with fin bit clear, and opcode 0
+                    [self _sendFrameWithOpcode:0x0 payload:unmasked_payload length:frameSize finMask:SRFinMaskClear];
+                } else {
+                    // FINISHED - terminated by single frame with finbit set, and opcode 0
+                    [self _sendFrameWithOpcode:0x0 payload:unmasked_payload length:frameSize finMask:SRFinMask];
+                }
+            }
         }
     });
 }
@@ -1005,6 +1039,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
  */
 
 static const uint8_t SRFinMask          = 0x80;
+static const uint8_t SRFinMaskClear     = 0x0;
 static const uint8_t SROpCodeMask       = 0x0F;
 static const uint8_t SRRsvMask          = 0x70;
 static const uint8_t SRMaskMask         = 0x80;
@@ -1348,14 +1383,9 @@ static const char CRLFCRLFBytes[] = {'\r', '\n', '\r', '\n'};
 
 static const size_t SRFrameHeaderOverhead = 32;
 
-- (void)_sendFrameWithOpcode:(SROpCode)opcode data:(id)data;
-{
+- (void)_sendFrameWithOpcode:(SROpCode)opcode payload:(const uint8_t *)unmasked_payload length:(size_t)payloadLength finMask:(uint8_t)finMask {
     [self assertOnWorkQueue];
     
-    NSAssert(data == nil || [data isKindOfClass:[NSData class]] || [data isKindOfClass:[NSString class]], @"Function expects nil, NSString or NSData");
-    
-    size_t payloadLength = [data isKindOfClass:[NSString class]] ? [(NSString *)data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] : [data length];
-        
     NSMutableData *frame = [[NSMutableData alloc] initWithLength:payloadLength + SRFrameHeaderOverhead];
     if (!frame) {
         [self closeWithCode:SRStatusCodeMessageTooBig reason:@"Message too big"];
@@ -1364,7 +1394,7 @@ static const size_t SRFrameHeaderOverhead = 32;
     uint8_t *frame_buffer = (uint8_t *)[frame mutableBytes];
     
     // set fin
-    frame_buffer[0] = SRFinMask | opcode;
+    frame_buffer[0] = finMask | opcode;
     
     BOOL useMask = YES;
 #ifdef NOMASK
@@ -1372,18 +1402,11 @@ static const size_t SRFrameHeaderOverhead = 32;
 #endif
     
     if (useMask) {
-    // set the mask and header
+        // set the mask and header
         frame_buffer[1] |= SRMaskMask;
     }
     
     size_t frame_buffer_size = 2;
-    
-    const uint8_t *unmasked_payload = NULL;
-    if ([data isKindOfClass:[NSData class]]) {
-        unmasked_payload = (uint8_t *)[data bytes];
-    } else if ([data isKindOfClass:[NSString class]]) {
-        unmasked_payload =  (const uint8_t *)[data UTF8String];
-    }
     
     if (payloadLength < 126) {
         frame_buffer[1] |= payloadLength;
@@ -1396,7 +1419,7 @@ static const size_t SRFrameHeaderOverhead = 32;
         *((uint64_t *)(frame_buffer + frame_buffer_size)) = EndianU64_BtoN((uint64_t)payloadLength);
         frame_buffer_size += sizeof(uint64_t);
     }
-        
+    
     if (!useMask) {
         for (size_t i = 0; i < payloadLength; i++) {
             frame_buffer[frame_buffer_size] = unmasked_payload[i];
@@ -1413,11 +1436,30 @@ static const size_t SRFrameHeaderOverhead = 32;
             frame_buffer_size += 1;
         }
     }
-
+    
     assert(frame_buffer_size <= [frame length]);
     frame.length = frame_buffer_size;
     
     [self _writeData:frame];
+
+}
+
+
+// Unfragmented messages
+- (void)_sendFrameWithOpcode:(SROpCode)opcode data:(id)data;
+{
+    NSAssert(data == nil || [data isKindOfClass:[NSData class]] || [data isKindOfClass:[NSString class]], @"Function expects nil, NSString or NSData");
+    
+    size_t payloadLength = [data isKindOfClass:[NSString class]] ? [(NSString *)data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] : [data length];
+    
+    const uint8_t *unmasked_payload = NULL;
+    if ([data isKindOfClass:[NSData class]]) {
+        unmasked_payload = (uint8_t *)[data bytes];
+    } else if ([data isKindOfClass:[NSString class]]) {
+        unmasked_payload =  (const uint8_t *)[data UTF8String];
+    }
+    
+    [self _sendFrameWithOpcode:opcode payload:unmasked_payload length:payloadLength finMask:SRFinMask];
 }
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode;
