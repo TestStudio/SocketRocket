@@ -776,24 +776,17 @@ static __strong NSData *CRLFCRLF;
         } else if (sData == nil) {
             opcode = SROpCodeTextFrame;
         } else {
-            assert(NO);
+            NSAssert(NO, @"Function expects nil, NSString or NSData");
         }
         
-        NSAssert(sData == nil || [sData isKindOfClass:[NSData class]] || [sData isKindOfClass:[NSString class]], @"Function expects nil, NSString or NSData");
-        
-        size_t payloadLength = [sData isKindOfClass:[NSString class]] ? [(NSString *)sData lengthOfBytesUsingEncoding:NSUTF8StringEncoding] : [sData length];
-        if (payloadLength < MAX_FRAME_SIZE) { // unfragmented
+        size_t payloadLength = [sData length];
+        if (payloadLength <= MAX_FRAME_SIZE) { // unfragmented
             [self _sendFrameWithOpcode:opcode data:sData];
         } else { // fragmented
             const uint8_t *unmasked_payload = NULL;
             for (size_t pos = 0; pos < payloadLength; pos += MAX_FRAME_SIZE) {
                 size_t frameSize = (pos + MAX_FRAME_SIZE) > payloadLength ? payloadLength - pos : MAX_FRAME_SIZE;
-                
-                if ([sData isKindOfClass:[NSData class]]) {
-                    unmasked_payload = (const uint8_t *)[[sData subdataWithRange:NSMakeRange(pos, frameSize)] bytes];
-                } else if ([sData isKindOfClass:[NSString class]]) {
-                    unmasked_payload =  (const uint8_t *)[[sData substringWithRange:NSMakeRange(pos, frameSize)] UTF8String];
-                }
+                unmasked_payload = (const uint8_t *)[[sData subdataWithRange:NSMakeRange(pos, frameSize)] bytes];
                 
                 if (pos == 0) {
                     // START - First frame w/fin bit clear, and opcode other than 0
