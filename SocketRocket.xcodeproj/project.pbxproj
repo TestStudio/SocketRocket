@@ -27,6 +27,29 @@
 		454FEA851D25719900073768 /* SRSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 454FEA831D25717C00073768 /* SRSecurityPolicy.m */; };
 		454FEA861D25719A00073768 /* SRSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 454FEA831D25717C00073768 /* SRSecurityPolicy.m */; };
 		454FEA871D25719A00073768 /* SRSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 454FEA831D25717C00073768 /* SRSecurityPolicy.m */; };
+		60C0002D1FF630320059E49B /* SRPinningSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 454FEA7A1D2570D400073768 /* SRPinningSecurityPolicy.m */; };
+		60C0002E1FF630320059E49B /* SRProxyConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = 4861E7741D022211002FAB1D /* SRProxyConnect.m */; };
+		60C0002F1FF630320059E49B /* SRDelegateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 817995851CE139700084DA37 /* SRDelegateController.m */; };
+		60C000301FF630320059E49B /* SRIOConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B31C101CDC404100D86D43 /* SRIOConsumer.m */; };
+		60C000311FF630320059E49B /* SRIOConsumerPool.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B31C121CDC404100D86D43 /* SRIOConsumerPool.m */; };
+		60C000321FF630320059E49B /* SRRunLoopThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B31C5E1CDC444900D86D43 /* SRRunLoopThread.m */; };
+		60C000331FF630320059E49B /* SRError.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B22EC41CE42D7E0073C636 /* SRError.m */; };
+		60C000341FF630320059E49B /* SRHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B31C2C1CDC406B00D86D43 /* SRHash.m */; };
+		60C000351FF630320059E49B /* SRHTTPConnectMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C22BC11D124168007BFDDF /* SRHTTPConnectMessage.m */; };
+		60C000361FF630320059E49B /* SRLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 81900A4B1D18C9CC0015A290 /* SRLog.m */; };
+		60C000371FF630320059E49B /* SRMutex.m in Sources */ = {isa = PBXBuildFile; fileRef = 817491A71D1C8C33006E09DF /* SRMutex.m */; };
+		60C000381FF630320059E49B /* SRRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C22BF71D1256E1007BFDDF /* SRRandom.m */; };
+		60C000391FF630320059E49B /* SRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 815FE7251D497D720085FDA5 /* SRConstants.m */; };
+		60C0003A1FF630320059E49B /* SRURLUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B22EE31CE43ECC0073C636 /* SRURLUtilities.m */; };
+		60C0003B1FF630320059E49B /* SRSIMDHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = F5391CBD1D2F4B4700606A81 /* SRSIMDHelpers.m */; };
+		60C0003C1FF630320059E49B /* SRSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 454FEA831D25717C00073768 /* SRSecurityPolicy.m */; };
+		60C0003D1FF630320059E49B /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A12CD0145119B700C1D980 /* SRWebSocket.m */; };
+		60C0003E1FF630320059E49B /* NSURLRequest+SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 81CD05D61CEEC47300497F47 /* NSURLRequest+SRWebSocket.m */; };
+		60C0003F1FF630320059E49B /* NSRunLoop+SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 81CD05FC1CEEC65D00497F47 /* NSRunLoop+SRWebSocket.m */; };
+		60C000411FF630410059E49B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60C000401FF630410059E49B /* CFNetwork.framework */; };
+		60C000431FF6304B0059E49B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60C000421FF6304B0059E49B /* Foundation.framework */; };
+		60C000451FF630510059E49B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60C000441FF630510059E49B /* Security.framework */; };
+		60C000471FF630720059E49B /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = F6A12CCF145119B700C1D980 /* SRWebSocket.h */; };
 		8105E4801CDD67B400AA12DB /* SRAutobahnTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8105E47A1CDD679A00AA12DB /* SRAutobahnTests.m */; };
 		8105E4821CDD67BD00AA12DB /* SRTWebSocketOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8105E4771CDD679A00AA12DB /* SRTWebSocketOperation.m */; };
 		8105E4AE1CDD6E6200AA12DB /* SRAutobahnOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8105E4AD1CDD6E6200AA12DB /* SRAutobahnOperation.m */; };
@@ -235,6 +258,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		60C000221FF62FDB0059E49B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		81E8A6A61D4C41E000916C7E /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -258,6 +290,10 @@
 		4861E7731D022211002FAB1D /* SRProxyConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRProxyConnect.h; sourceTree = "<group>"; };
 		4861E7741D022211002FAB1D /* SRProxyConnect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRProxyConnect.m; sourceTree = "<group>"; };
 		555E0EB11C51E56D00E6BB92 /* SocketRocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketRocket.h; sourceTree = "<group>"; };
+		60C000241FF62FDB0059E49B /* libSocketRocket_static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSocketRocket_static.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		60C000401FF630410059E49B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
+		60C000421FF6304B0059E49B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		60C000441FF630510059E49B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		8105E4761CDD679A00AA12DB /* SRTWebSocketOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRTWebSocketOperation.h; sourceTree = "<group>"; };
 		8105E4771CDD679A00AA12DB /* SRTWebSocketOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRTWebSocketOperation.m; sourceTree = "<group>"; };
 		8105E4791CDD679A00AA12DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -367,6 +403,16 @@
 				81C68CDF1D2CBE1900A1D005 /* CFNetwork.framework in Frameworks */,
 				3345DC871C52ACD70083CCB8 /* Security.framework in Frameworks */,
 				3345DC881C52ACD70083CCB8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60C000211FF62FDB0059E49B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60C000451FF630510059E49B /* Security.framework in Frameworks */,
+				60C000431FF6304B0059E49B /* Foundation.framework in Frameworks */,
+				60C000411FF630410059E49B /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +733,7 @@
 				2D4227621BB4358C000C1A6C /* SocketRocket.framework */,
 				3345DC901C52ACD70083CCB8 /* SocketRocket.framework */,
 				81D6478D1D2CA78800690609 /* SocketRocket.framework */,
+				60C000241FF62FDB0059E49B /* libSocketRocket_static.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -694,6 +741,9 @@
 		F6B2082F1450F597009315AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				60C000441FF630510059E49B /* Security.framework */,
+				60C000421FF6304B0059E49B /* Foundation.framework */,
+				60C000401FF630410059E49B /* CFNetwork.framework */,
 				81AFCD651D4C431C00B3AFC9 /* libicucore.tbd */,
 				81C68CF41D2CBEBD00A1D005 /* macOS */,
 				81C68CFD1D2CBF1800A1D005 /* tvOS */,
@@ -780,6 +830,14 @@
 				81B22EC81CE42D7E0073C636 /* SRError.h in Headers */,
 				81B31C621CDC444900D86D43 /* SRRunLoopThread.h in Headers */,
 				F5391CC11D2F4B4700606A81 /* SRSIMDHelpers.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60C000461FF6305E0059E49B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60C000471FF630720059E49B /* SRWebSocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -878,6 +936,24 @@
 			productReference = 3345DC901C52ACD70083CCB8 /* SocketRocket.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		60C000231FF62FDB0059E49B /* SocketRocket_static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 60C0002C1FF62FDB0059E49B /* Build configuration list for PBXNativeTarget "SocketRocket_static" */;
+			buildPhases = (
+				60C000201FF62FDB0059E49B /* Sources */,
+				60C000211FF62FDB0059E49B /* Frameworks */,
+				60C000221FF62FDB0059E49B /* CopyFiles */,
+				60C000461FF6305E0059E49B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SocketRocket_static;
+			productName = SocketRocket_static;
+			productReference = 60C000241FF62FDB0059E49B /* libSocketRocket_static.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		81D6475F1D2CA78800690609 /* SocketRocket-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 81D6478A1D2CA78800690609 /* Build configuration list for PBXNativeTarget "SocketRocket-iOS" */;
@@ -958,6 +1034,13 @@
 			attributes = {
 				LastTestingUpgradeCheck = 0640;
 				LastUpgradeCheck = 0800;
+				TargetAttributes = {
+					60C000231FF62FDB0059E49B = {
+						CreatedOnToolsVersion = 9.2;
+						DevelopmentTeam = TA4BW547F2;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = F6B208271450F597009315AF /* Build configuration list for PBXProject "SocketRocket" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -971,6 +1054,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				60C000231FF62FDB0059E49B /* SocketRocket_static */,
 				81D6475F1D2CA78800690609 /* SocketRocket-iOS */,
 				2D4227611BB4358C000C1A6C /* SocketRocket-iOS-Dynamic */,
 				F668C87F153E91210044DBAC /* SocketRocket-macOS */,
@@ -1052,6 +1136,32 @@
 				81900A531D18C9CC0015A290 /* SRLog.m in Sources */,
 				81B31C341CDC406B00D86D43 /* SRHash.m in Sources */,
 				8179958D1CE139700084DA37 /* SRDelegateController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60C000201FF62FDB0059E49B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60C0002D1FF630320059E49B /* SRPinningSecurityPolicy.m in Sources */,
+				60C0002E1FF630320059E49B /* SRProxyConnect.m in Sources */,
+				60C0002F1FF630320059E49B /* SRDelegateController.m in Sources */,
+				60C000301FF630320059E49B /* SRIOConsumer.m in Sources */,
+				60C000311FF630320059E49B /* SRIOConsumerPool.m in Sources */,
+				60C000321FF630320059E49B /* SRRunLoopThread.m in Sources */,
+				60C000331FF630320059E49B /* SRError.m in Sources */,
+				60C000341FF630320059E49B /* SRHash.m in Sources */,
+				60C000351FF630320059E49B /* SRHTTPConnectMessage.m in Sources */,
+				60C000361FF630320059E49B /* SRLog.m in Sources */,
+				60C000371FF630320059E49B /* SRMutex.m in Sources */,
+				60C000381FF630320059E49B /* SRRandom.m in Sources */,
+				60C000391FF630320059E49B /* SRConstants.m in Sources */,
+				60C0003A1FF630320059E49B /* SRURLUtilities.m in Sources */,
+				60C0003B1FF630320059E49B /* SRSIMDHelpers.m in Sources */,
+				60C0003C1FF630320059E49B /* SRSecurityPolicy.m in Sources */,
+				60C0003D1FF630320059E49B /* SRWebSocket.m in Sources */,
+				60C0003E1FF630320059E49B /* NSURLRequest+SRWebSocket.m in Sources */,
+				60C0003F1FF630320059E49B /* NSRunLoop+SRWebSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1203,10 +1313,125 @@
 			};
 			name = Release;
 		};
+		60C0002A1FF62FDB0059E49B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = TA4BW547F2;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		60C0002B1FF62FDB0059E49B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = TA4BW547F2;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		81D6478B1D2CA78800690609 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81D6475A1D2CA6A100690609 /* SocketRocket-iOS.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 			};
 			name = Debug;
 		};
@@ -1214,6 +1439,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81D6475A1D2CA6A100690609 /* SocketRocket-iOS.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 			};
 			name = Release;
 		};
@@ -1251,6 +1477,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81D647561D2CA6A100690609 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Debug;
 		};
@@ -1258,6 +1486,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81D647571D2CA6A100690609 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Release;
 		};
@@ -1292,6 +1522,15 @@
 			buildConfigurations = (
 				3345DC8E1C52ACD70083CCB8 /* Debug */,
 				3345DC8F1C52ACD70083CCB8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		60C0002C1FF62FDB0059E49B /* Build configuration list for PBXNativeTarget "SocketRocket_static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60C0002A1FF62FDB0059E49B /* Debug */,
+				60C0002B1FF62FDB0059E49B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
